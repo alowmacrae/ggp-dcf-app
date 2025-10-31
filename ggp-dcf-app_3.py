@@ -4,7 +4,7 @@ import pandas as pd
 st.set_page_config(page_title="GGP 10-Year DCF (£ millions)", layout="wide")
 
 st.title("Greatland Gold – 10-Year DCF Model (£ Millions)")
-st.write("All amounts are shown in approximate £ millions (A$ ÷ 6 000 000).")
+st.write("All values converted from AUD to GBP (A$ ÷ 2) and shown in £ millions.")
 
 # ── Sidebar inputs ──────────────────────────────────────────────
 st.sidebar.header("Key assumptions")
@@ -59,15 +59,15 @@ enterprise_value_aud = sum(pvs)
 equity_value_aud = enterprise_value_aud + cash_balance - deferred_liability
 value_per_share_aud = equity_value_aud / shares_out
 
-# ── Convert to £ millions ───────────────────────────────────────
+# ── Convert to £ millions (A$ ÷ 2 ÷ 1,000,000) ─────────────────
 def aud_to_gbp_m(x): 
-    return x / 6_000_000  # divide by 6 million → £ millions
+    return x / 2_000_000  # A$ ÷ 2 ÷ 1,000,000 → £ millions
 
 ev_gbp_m = aud_to_gbp_m(enterprise_value_aud)
 eq_gbp_m = aud_to_gbp_m(equity_value_aud)
 fcf_gbp_m = [aud_to_gbp_m(f) for f in fcfs]
 pv_gbp_m = [aud_to_gbp_m(p) for p in pvs]
-vps_gbp = value_per_share_aud / 6  # per-share £
+vps_gbp = value_per_share_aud / 2  # A$ ÷ 2 → £ per share
 
 # ── Display results ─────────────────────────────────────────────
 col1, col2, col3 = st.columns(3)
@@ -89,4 +89,4 @@ st.dataframe(df)
 st.subheader("Discounted FCF Profile (£ m)")
 st.line_chart(df.set_index("Year")["Discounted FCF (£ m)"])
 
-st.caption("All figures in approximate £ millions (A$ ÷ 6 000 000). Defaults based on FY25 report and current cash ≈ A$750 m.")
+st.caption("All figures converted from AUD → GBP (÷2) and displayed in £ millions.")
